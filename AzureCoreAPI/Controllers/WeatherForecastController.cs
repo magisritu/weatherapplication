@@ -60,7 +60,7 @@ namespace AzureCoreAPI.Controllers
         public async Task<IActionResult> UpdateWeatherImage([FromForm] UpdateWeatherImage model)
         {
             //string pictureUrl = null;
-            // Test commit
+            // Test commit 3
             var functionUrl = _config.GetSection("AzureFunction").GetSection("WeatherImageUpload").Value;
             // Call Azure fucntion to upload image
 
