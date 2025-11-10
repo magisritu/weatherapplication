@@ -1,7 +1,9 @@
-using AzureCoreAPI.DependencyInjection;
+﻿using AzureCoreAPI.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Logging;
 
@@ -53,6 +55,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // The following flag can be used to get more descriptive errors in development environments
 IdentityModelEventSource.ShowPII = false;
 
+builder.Logging.AddAzureWebAppDiagnostics(); // 👈 custom file path
+builder.Services.Configure<AzureFileLoggerOptions>(options =>
+{
+    options.FileName = "realtimelog";
+    options.FileSizeLimit = 50 * 1024;
+    options.RetainedFileCountLimit = 5;
+});
 
 // Add services to the container.
 builder.Services.AddControllers();

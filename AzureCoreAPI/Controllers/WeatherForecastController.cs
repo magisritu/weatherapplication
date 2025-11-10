@@ -16,7 +16,7 @@ namespace AzureCoreAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
@@ -70,6 +70,7 @@ namespace AzureCoreAPI.Controllers
             // Step 1: Forward file to Azure Function
             try
             {
+                _logger.LogWarning("function call started");
                 using var httpClient = _httpClientFactory.CreateClient();
 
                 using var formData = new MultipartFormDataContent();
@@ -102,7 +103,7 @@ namespace AzureCoreAPI.Controllers
 
                 // Step 2: Update Weather record with image URL
                 await _weatherRepository.UpdateWeatherImage(model.WeatherId, uploadResult.PictureUrl);
-
+                _logger.LogWarning("completed and url saved on database");
                 return Ok(new { weatherId = model.WeatherId, imageUrl = uploadResult.PictureUrl });
             }
             catch (Exception ex)
