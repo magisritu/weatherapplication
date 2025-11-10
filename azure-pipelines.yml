@@ -11,6 +11,10 @@ variables:
   buildConfiguration: 'prod'
 
 steps:
+- task: Npm@1
+  inputs:
+    command: 'install'
+    
 - script: 
     npm install
     npm run build-prod
