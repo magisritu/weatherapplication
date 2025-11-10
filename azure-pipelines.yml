@@ -1,7 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
 trigger:
 - main
@@ -12,25 +8,15 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: 'prod'
 
 steps:
-- task: NuGetToolInstaller@1
+- script: 
+    npm install
+    npm run build-prod
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAs
-    SingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation
-    ="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web
-    Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
 - task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/dist'
+    ArtifactName: 'angular-app'
+  displayName: 'Publish Build Artifacts'
